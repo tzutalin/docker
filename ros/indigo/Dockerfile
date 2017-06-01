@@ -42,6 +42,7 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y \
   wget \
   zip \
   zlib1g-dev \
+  ninja \
   --no-install-recommends
 
 # CMake 3.x
