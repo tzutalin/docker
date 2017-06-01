@@ -72,12 +72,21 @@ RUN cd /opt && wget --output-document=android-sdk.tgz --quiet https://dl.google.
   /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools" && \
   /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools,build-tools-22.0.1,build-tools-23.0.3,build-tools-24.0.3,build-tools-25.0.0,build-tools-25.0.1,android-21,android-22,android-23,android-24,android-25,addon-google_apis_x86-google-21,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services,sys-img-armeabi-v7a-android-24"
 
+# Install Android NDK
+RUN wget https://dl.google.com/android/repository/android-ndk-r14b-linux-x86_64.zip
+RUN unzip android-ndk-r14b-linux-x86_64.zip
+RUN mv android-ndk-r14b /opt/android-ndk
+RUN rm android-ndk-r14b-linux-x86_64.zip
+
 # Setup environment
 ENV ANDROID_HOME /opt/android-sdk-linux
 ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+ENV ANDROID_NDK_HOME /opt/android-ndk
+ENV PATH $PATH:$ANDROID_NDK_HOME
 
 RUN which adb
 RUN which android
+RUN which ndk-build
 
 # Cleaning
 RUN apt-get clean
