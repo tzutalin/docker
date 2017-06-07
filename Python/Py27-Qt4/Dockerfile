@@ -52,3 +52,7 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y \
 
 
 RUN pip install lxml
+
+# Install wine
+RUN dpkg --add-architecture i386
+RUN apt-get update -y && apt-get install -y software-properties-common && add-apt-repository -y ppa:ubuntu-wine/ppa &&  apt-get update -y && apt-get install -y wine1.7 winetricks

@@ -3,6 +3,12 @@
 docker build -t tzutalin/py2qt4 .
 ```
 
+### Pull the image from Docker hub
+
+```
+docker pull tzutalin/py2qt4
+```
+
 ### Usage
 Change directory to your project directory, than run in the interactive mode:
 ```
