@@ -19,9 +19,12 @@ RUN /usr/local/bin/install-plugins.sh  \
     icon-shim \
     javadoc \
     locale \
-    role-strategy
+    docker-plugin \
+    role-strategy \
+    envinject
 
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
 # drop back to the regular jenkins user - good practice
 # Switch back to the jenkins user
+USER jenkins

@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# Use jenkins-slave URL secret
+if [ $# -eq 1 ]; then
+
+	# if `docker run` only has one arguments, we assume user is running alternate command like `bash` to inspect the image
+	exec "$@"
+else
+    echo "URL:"  $1
+    echo "Secret:" $2
+	exec java -jar /usr/share/jenkins/slave.jar -jnlpUrl $1 -secret $2
+fi
