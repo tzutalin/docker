@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  jenkins_data:
+    build: ./jenkins_data
+    volumes:
+      - ./jenkins_data/data:/var/jenkins_home
+
+  jenkins_master:
+    build: ./jenkins_master
+    volumes_from:
+      - jenkins_data
+    ports:
+      - "8081:8080"
+      - "50000:50000"
+    environment:
+      - JAVA_OPTS="-Djava.util.logging.config.file=/var/jenkins_home/log.properties"
+    depends_on:
+      - jenkins_data
