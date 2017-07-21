@@ -47,12 +47,15 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y \
   python2.7-dev \
   python-qt4 \
   pyqt4-dev-tools \
+  libffi-dev \
+  libssl-dev \
   xvfb \
   --no-install-recommends
 
 
 RUN pip install lxml
-
+# In order to upload to pypi
+RUN pip install pyopenssl ndg-httpsclient pyasn1 twine
 # Install wine
 RUN dpkg --add-architecture i386
 RUN apt-get update -y && apt-get install -y software-properties-common && add-apt-repository -y ppa:ubuntu-wine/ppa &&  apt-get update -y && apt-get install -y wine1.7 winetricks

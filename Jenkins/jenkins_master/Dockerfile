@@ -21,6 +21,7 @@ RUN /usr/local/bin/install-plugins.sh  \
     locale \
     docker-plugin \
     role-strategy \
+    copyartifact-plugin \
     envinject
 
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
