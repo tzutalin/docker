@@ -1,5 +1,5 @@
 ### Usage
-####Launch Jenkins master and its data container
+#### Launch Jenkins master and its data container
 ```
 docker-compose up
 ```
@@ -11,7 +11,7 @@ docker-compose pull
 docker-compose up --build -d
 ```
 
-####Add Slave or angent
+#### Add Slave or angent
 ```
 cd jenkins_slave;make build;make run url=<XXXX> secret=<YYYY>
 ```
