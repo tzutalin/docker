@@ -14,4 +14,6 @@ VOLUME ["/var/log/jenkins", "/var/jenkins_home"]
 
 USER jenkins
 
+# Config git unless someone in the container cannot clone submodule
+RUN git config --global user.email "tzu.ta.lin@gmail.com" && git config --global user.name "tzutalin"
 CMD ["echo", "Data container for Jenkins"]
