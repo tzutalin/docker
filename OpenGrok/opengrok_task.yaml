@@ -4,7 +4,5 @@ task:
     schedule_time_every: 2
 
     jobs:
-      RemoveTmpFile:
-          - cd /src;rm -rf *tmp
       OpenGrokIndex:
-          - IGNORE_PATTERNS="-i build -i install -i *.so -i *.png -i *.jpg -i *.dll  -i *.apk" OpenGrok index
+          - IGNORE_PATTERNS="-i build -i install -i *.so -i *.png -i *.jpg -i *.dll  -i *.apk -i d:.tox -i d:.git" OpenGrok index

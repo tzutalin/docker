@@ -3,13 +3,11 @@ service tomcat7 start
 # link mounted source directory to opengrok
 ln -s /src $OPENGROK_INSTANCE_BASE/src
 
-# Remove unncecessary folder for jenkins
-cd /src; rm -rf *tmp
 
 # first-time index
 echo "** Running first-time indexing"
 
-IGNORE_PATTERNS="-i build -i install -i *.so -i *.png -i *.jpg -i *.dll  -i *.apk" OpenGrok index
+IGNORE_PATTERNS="-i build -i install -i *.so -i *.png -i *.jpg -i *.dll  -i *.apk -i d:.tox -i d:.git" OpenGrok index
 
 # ... and we keep running the indexer to keep the container on
 echo "** Waiting for source updates..."
