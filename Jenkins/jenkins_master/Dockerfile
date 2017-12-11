@@ -1,4 +1,4 @@
-FROM jenkins
+FROM jenkins/jenkins:lts
 MAINTAINER Jenkins Builds Eng "tzu.ta.lin@gmail.com"
 
 # Install pre-installed plugins
