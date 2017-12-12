@@ -1,6 +1,6 @@
 ### Build image
 ```
-docker build -t tzutalin/android25 .
+docker build -t android_java8 .
 ```
 
 ### Usage
