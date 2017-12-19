@@ -53,25 +53,58 @@ RUN apt-add-repository ppa:openjdk-r/ppa && apt-get update && apt-get -y install
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
 # Support Gradle
 ENV TERM dumb
+
 # Limit the memory usage to build on mirco server with less 1G memory
-ENV JAVA_OPTS "-Xms128m -Xmx256m"
-ENV GRADLE_OPTS "-Xmx256m -XX:HeapDumpOnOutOfMemoryError"
+#ENV JAVA_OPTS "-Xms128m -Xmx512m"
+#ENV GRADLE_OPTS "-Xmx512m"
 
 # Install Deps
 RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y --force-yes expect git wget libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 python curl libqt5widgets5 && apt-get clean && rm -fr /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Copy install tools
-COPY tools /opt/tools
-RUN ["chmod", "+x", "/opt/tools/android-accept-licenses.sh"]
-ENV PATH ${PATH}:/opt/tools
+# Setup environment
+ENV ANDROID_HOME /opt/android-sdk-linux
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+ENV ANDROID_NDK_HOME /opt/android-ndk
+ENV PATH $PATH:$ANDROID_NDK_HOME
 
-# Install Android SDK
-RUN cd /opt && wget --output-document=android-sdk.tgz --quiet https://dl.google.com/android/android-sdk_r24.4.1-linux.tgz && \
-  tar xzf android-sdk.tgz && \
-  rm -f android-sdk.tgz && \
-  chown -R root.root android-sdk-linux && \
-  /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools" && \
-  /opt/tools/android-accept-licenses.sh "android-sdk-linux/tools/android update sdk --all --no-ui --filter platform-tools,tools,build-tools-22.0.1,build-tools-23.0.3,build-tools-24.0.3,build-tools-25.0.0,build-tools-25.0.1,build-tools-26.0.2,android-21,android-22,android-23,android-24,android-25,android-26,,android-27,addon-google_apis_x86-google-21,extra-android-support,extra-android-m2repository,extra-google-m2repository,extra-google-google_play_services,sys-img-armeabi-v7a-android-24"
+# Install SDK
+# --- Download Android SDK tools into $ANDROID_HOME
+RUN cd /opt \
+    && wget -q https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -O android-sdk-tools.zip \
+    && unzip -q android-sdk-tools.zip -d ${ANDROID_HOME} \
+    && rm android-sdk-tools.zip
+
+ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
+
+RUN yes | sdkmanager --licenses
+
+# --- Platform tools
+RUN sdkmanager "emulator" "tools" "platform-tools"
+
+# --- SDKs
+# --- Please keep these in descending order!
+# --- The `yes` is for accepting all non-standard tool licenses.
+
+# --- Please keep all sections in descending order!
+RUN yes | sdkmanager \
+    "platforms;android-27" \
+    "platforms;android-26" \
+    "platforms;android-25" \
+    "build-tools;27.0.2" \
+    "build-tools;27.0.1" \
+    "build-tools;27.0.0" \
+    "build-tools;26.0.2" \
+    "build-tools;26.0.1" \
+    "system-images;android-26;google_apis;x86" \
+    "system-images;android-25;google_apis;armeabi-v7a" \
+    "extras;android;m2repository" \
+    "extras;google;m2repository" \
+    "extras;google;google_play_services" \
+    "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
+    "add-ons;addon-google_apis-google-23" \
+    "add-ons;addon-google_apis-google-22"
+
+# ------------------------------------------------------
 
 # Install Android NDK
 RUN wget https://dl.google.com/android/repository/android-ndk-r16-linux-x86_64.zip
@@ -79,11 +112,12 @@ RUN unzip android-ndk-r16-linux-x86_64.zip
 RUN mv android-ndk-r16 /opt/android-ndk
 RUN rm android-ndk-r16-linux-x86_64.zip
 
-# Setup environment
-ENV ANDROID_HOME /opt/android-sdk-linux
-ENV PATH ${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-ENV ANDROID_NDK_HOME /opt/android-ndk
-ENV PATH $PATH:$ANDROID_NDK_HOME
+
+# For Android emulator
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y libqt5widgets5
+ENV QT_QPA_PLATFORM offscreen
+ENV LD_LIBRARY_PATH ${ANDROID_HOME}/tools/lib64:${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
+
 
 RUN which adb
 RUN which android
