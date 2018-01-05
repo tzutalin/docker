@@ -25,3 +25,14 @@ Clean the image
 ```
 $ make clean
 ```
+
+## Troubleshooting
+
+```
+No network in containers
+
+Check if your dns work in your container: $ docker run busybox nslookup google.com
+
+If not work, in ubuntu, open /etc/resolv.conf and add nameserver
+```
+
